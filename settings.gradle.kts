@@ -2,6 +2,7 @@ rootProject.name = "JavaProfessional"
 include("hw01-gradle")
 include("hw02-generic-collections")
 include("hw04-garbage-collector")
+include("hw05-aop")
 
 pluginManagement {
     val jgitver: String by settings
@@ -24,3 +25,4 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
+
