@@ -1,6 +1,7 @@
 rootProject.name = "JavaProfessional"
 include("hw01-gradle")
 include("hw02-generic-collections")
+include("hw03-reflection-annotations")
 include("hw04-garbage-collector")
 include("hw05-aop")
 
