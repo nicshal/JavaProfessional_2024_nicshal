@@ -4,6 +4,7 @@ include("hw02-generic-collections")
 include("hw03-reflection-annotations")
 include("hw04-garbage-collector")
 include("hw05-aop")
+include("hw06-atm")
 
 pluginManagement {
     val jgitver: String by settings
