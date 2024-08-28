@@ -1,7 +1,8 @@
 package ru.nicshal.advanced;
 
-import ru.nicshal.advanced.homework.atm.ATM;
+import ru.nicshal.advanced.homework.atm.RubleATM;
 import ru.nicshal.advanced.homework.atm.Banknote;
+import ru.nicshal.advanced.homework.atm.BanknoteFaceValue;
 import ru.nicshal.advanced.homework.atm.Cassette;
 
 import org.slf4j.Logger;
@@ -31,7 +32,12 @@ public class ATMApplication {
         logger.info("Забираем купюры ---> {}", testCassette.removeBanknoteCount(2));
         logger.info("Баланс кассеты ---> {}", testCassette.getBalance());
 
-        ATM atm = new ATM("Тестовый");
+        ArrayList<Cassette> cassettes = new ArrayList<>();
+        for (int i = 0; i < BanknoteFaceValue.values().length; i++) {
+            cassettes.add(new Cassette(i, new ArrayList<>()));
+        }
+
+        RubleATM rubleAtm = new RubleATM("Тестовый", cassettes);
         List<Banknote> lst2 = List.of(
                 new Banknote(RUB5000, "RUB"),
                 new Banknote(RUB5000, "RUB"),
@@ -70,13 +76,13 @@ public class ATMApplication {
                 new Banknote(RUB50, "RUB"),
                 new Banknote(RUB50, "RUB"));
 
-        atm.loadATM(lst2);
-        System.out.println(atm);
-        logger.info("Содержимое АТМ ---> {}", atm);
-        logger.info("Баланс АТМ ---> {}", atm.getBalance());
-        System.out.println(atm.getBanknotes(5650));
-        logger.info("Выдача пачки денег ---> {}", atm.getBanknotes(5650));
-        logger.info("Баланс АТМ ---> {}", atm.getBalance());
+        rubleAtm.loadATM(lst2);
+        System.out.println(rubleAtm);
+        logger.info("Содержимое АТМ ---> {}", rubleAtm);
+        logger.info("Баланс АТМ ---> {}", rubleAtm.getBalance());
+        System.out.println(rubleAtm.getBanknotes(5650));
+        logger.info("Выдача пачки денег ---> {}", rubleAtm.getBanknotes(5650));
+        logger.info("Баланс АТМ ---> {}", rubleAtm.getBalance());
     }
 
 }
