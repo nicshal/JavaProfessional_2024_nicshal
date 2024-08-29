@@ -17,12 +17,14 @@ public class RubleATM implements ATM {
         return ATMID;
     }
 
+    @Override
     public void loadATM(List<Banknote> pack) {
         for (Banknote banknote : pack) {
             cassettes.get(banknote.getFaceValue().ordinal()).addBanknote(banknote);
         }
     }
 
+    @Override
     public List<Banknote> getBanknotes(int amount) {
         if (amount > getBalance()) {
             throw new BalanceException("Невозможно выдать всю сумму целиком. В банкомате не хватает средств");
@@ -47,6 +49,7 @@ public class RubleATM implements ATM {
         return pack;
     }
 
+    @Override
     public int getBalance() {
         return cassettes.stream().map(Cassette::getBalance).reduce(0, Integer::sum);
     }
