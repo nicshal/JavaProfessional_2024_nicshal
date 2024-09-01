@@ -16,7 +16,7 @@ public class Message implements Cloneable {
     private final String field12;
     private final ObjectForMessage field13;
 
-    public Message(
+    private Message(
             long id,
             String field1,
             String field2,

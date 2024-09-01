@@ -94,7 +94,7 @@ class ComplexProcessorTest {
         complexProcessor.handle(message);
 
         // then
-        verify(listener, times(1)).onUpdated(message, null);
+        verify(listener, times(1)).onUpdated(message, message);
     }
 
     @Test
