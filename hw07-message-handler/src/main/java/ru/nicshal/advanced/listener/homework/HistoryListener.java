@@ -8,7 +8,7 @@ import ru.nicshal.advanced.model.Message;
 
 public class HistoryListener implements Listener, HistoryReader {
 
-    Map<Long, Message> messageMap = new HashMap<>();
+    private final Map<Long, Message> messageMap = new HashMap<>();
 
     @Override
     public void onUpdated(Message msg, Message newMsg) {
