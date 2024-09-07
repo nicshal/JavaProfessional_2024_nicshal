@@ -6,6 +6,7 @@ include("hw04-garbage-collector")
 include("hw05-aop")
 include("hw06-atm")
 include("hw07-message-handler")
+include("hw08-json")
 
 pluginManagement {
     val jgitver: String by settings
@@ -28,4 +29,3 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
-
