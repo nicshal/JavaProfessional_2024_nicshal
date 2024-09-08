@@ -2,6 +2,8 @@ package ru.nicshal.advanced.dataprocessor;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -29,11 +31,17 @@ public class ResourcesFileLoader implements Loader {
 
     @Override
     public List<Measurement> load() {
-        var file = new File(fileName);
-        try {
-            return mapper.readValue(file, new TypeReference<>(){});
-        } catch (IOException ex) {
-            throw new FileProcessException("Ошибка при загрузке данных из файла");
+        URL resource = getClass().getClassLoader().getResource(fileName);
+        if (resource == null) {
+            throw new IllegalArgumentException("file not found!");
+        } else {
+            try {
+                var file = new File(resource.toURI());
+                return mapper.readValue(file, new TypeReference<>() {
+                });
+            } catch (IOException | URISyntaxException ex) {
+                throw new FileProcessException("Ошибка при загрузке данных из файла");
+            }
         }
     }
 
