@@ -31,11 +31,11 @@ public class FileSerializer implements Serializer {
         // формирует результирующий json и сохраняет его в файл
         var file = new File(fileName);
         try {
-             mapper.writeValue(file, data
-                     .entrySet()
-                     .stream()
-                     .sorted(Map.Entry.<String, Double>comparingByValue())
-                     .collect(LinkedHashMap::new, (map, entry) -> map.put(entry.getKey(), entry.getValue()), Map::putAll));
+            mapper.writeValue(file, data
+                    .entrySet()
+                    .stream()
+                    .sorted(Map.Entry.<String, Double>comparingByValue())
+                    .collect(LinkedHashMap::new, (map, entry) -> map.put(entry.getKey(), entry.getValue()), Map::putAll));
         } catch (IOException ex) {
             throw new FileProcessException("Ошибка при выгрузке данных в файл");
         }
