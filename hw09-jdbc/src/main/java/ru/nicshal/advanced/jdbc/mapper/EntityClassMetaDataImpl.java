@@ -15,11 +15,22 @@ public final class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> 
 
     private static final Predicate<Field> FIELD_ID_PREDICATE = field -> field.isAnnotationPresent(Id.class);
     private final Class<T> clazz;
-    private final List<Field> fieldList;
+    private final List<Field> allFieldst;
+    private final List<Field> fieldsWithoutId;
+    private final Field IdField;
 
     private EntityClassMetaDataImpl(Class<T> clazz, Field[] fields) {
         this.clazz = clazz;
-        this.fieldList = new LinkedList<>(Arrays.asList(fields.clone()));
+        this.allFieldst = new LinkedList<>(Arrays.asList(fields.clone()));
+        this.fieldsWithoutId = allFieldst
+                .stream()
+                .filter(FIELD_ID_PREDICATE.negate())
+                .collect(Collectors.toList());
+        this.IdField = allFieldst
+                .stream()
+                .filter(FIELD_ID_PREDICATE)
+                .findFirst()
+                .orElseThrow(() -> new ClassMetaDataException("В классе не найдено поле, помеченное аннотацией @Id"));
     }
 
     public static <T> EntityClassMetaData<T> of(Class<T> clazz) {
@@ -42,24 +53,17 @@ public final class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> 
 
     @Override
     public Field getIdField() {
-        return fieldList
-                .stream()
-                .filter(FIELD_ID_PREDICATE)
-                .findFirst()
-                .orElseThrow(() -> new ClassMetaDataException("В классе не найдено поле, помеченное аннотацией @Id"));
+        return this.IdField;
     }
 
     @Override
     public List<Field> getAllFields() {
-        return fieldList;
+        return this.allFieldst;
     }
 
     @Override
     public List<Field> getFieldsWithoutId() {
-        return fieldList
-                .stream()
-                .filter(FIELD_ID_PREDICATE.negate())
-                .collect(Collectors.toList());
+        return this.fieldsWithoutId;
     }
 
 }

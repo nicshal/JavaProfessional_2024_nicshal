@@ -22,7 +22,6 @@ public class ResultSetMapper {
         } catch (SQLException ex) {
             throw new JdbcException("Ошибка при обработке выборки из базы данных", ex);
         }
-
         return instance;
     }
 

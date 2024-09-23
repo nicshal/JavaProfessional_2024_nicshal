@@ -1,22 +1,26 @@
 package ru.nicshal.advanced.jdbc.mapper;
 
 import java.lang.reflect.Field;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public final class EntitySQLMetaDataImpl implements EntitySQLMetaData {
 
     private static final String TEMPLATE = "###";
-    private final String tableName;
-    private final String IdFieldName;
-    private final List<String> fieldList;
+    private final String insertSql;
+    private final String updateSql;
+    private final String selectAllSql;
+    private final String selectByIdSql;
 
     private EntitySQLMetaDataImpl(String tableName, String IdFieldName, List<String> fieldList) {
-        this.tableName = tableName;
-        this.IdFieldName = IdFieldName;
-        this.fieldList = new LinkedList<>(fieldList);
-
+        this.insertSql = String.format("insert into %s (%s) values (%s)",
+                tableName, String.join(", ", fieldList), generateStatementFromTemplate(fieldList, "?")
+        );
+        this.updateSql = String.format("update %s set %s where %s = ?",
+                tableName, generateStatementFromTemplate(fieldList, TEMPLATE + " = ?"), IdFieldName
+        );
+        this.selectAllSql = String.format("select * from %s", tableName);
+        this.selectByIdSql = String.format("select * from %s where %s = ?", tableName, IdFieldName);
     }
 
     public static EntitySQLMetaData of(EntityClassMetaData<?> metaData) {
@@ -32,28 +36,22 @@ public final class EntitySQLMetaDataImpl implements EntitySQLMetaData {
 
     @Override
     public String getSelectAllSql() {
-        return String.format("select * from %s", tableName);
+        return this.selectAllSql;
     }
 
     @Override
     public String getSelectByIdSql() {
-        return String.format("select * from %s where %s = ?", tableName, IdFieldName);
+        return this.selectByIdSql;
     }
 
     @Override
     public String getInsertSql() {
-        return String.format(
-                "insert into %s (%s) values (%s)",
-                tableName, String.join(", ", fieldList), generateStatementFromTemplate(fieldList, "?")
-        );
+        return this.insertSql;
     }
 
     @Override
     public String getUpdateSql() {
-        return String.format(
-                "update %s set %s where %s = ?",
-                tableName, generateStatementFromTemplate(fieldList, TEMPLATE + " = ?"), IdFieldName
-        );
+        return this.updateSql;
     }
 
     private String generateStatementFromTemplate(List<String> fieldList, String template) {
