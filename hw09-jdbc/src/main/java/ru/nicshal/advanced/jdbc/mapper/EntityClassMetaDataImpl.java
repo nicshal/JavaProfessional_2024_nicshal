@@ -17,7 +17,8 @@ public final class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> 
     private final Class<T> clazz;
     private final List<Field> allFieldst;
     private final List<Field> fieldsWithoutId;
-    private final Field IdField;
+    private final Field idField;
+    Constructor<T> constructor;
 
     private EntityClassMetaDataImpl(Class<T> clazz, Field[] fields) {
         this.clazz = clazz;
@@ -26,11 +27,16 @@ public final class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> 
                 .stream()
                 .filter(FIELD_ID_PREDICATE.negate())
                 .collect(Collectors.toList());
-        this.IdField = allFieldst
+        this.idField = allFieldst
                 .stream()
                 .filter(FIELD_ID_PREDICATE)
                 .findFirst()
                 .orElseThrow(() -> new ClassMetaDataException("В классе не найдено поле, помеченное аннотацией @Id"));
+        try {
+            constructor = clazz.getConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new ClassMetaDataException("В классе не найден публичный конструктор", e);
+        }
     }
 
     public static <T> EntityClassMetaData<T> of(Class<T> clazz) {
@@ -44,16 +50,12 @@ public final class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> 
 
     @Override
     public Constructor<T> getConstructor() {
-        try {
-            return clazz.getConstructor();
-        } catch (NoSuchMethodException e) {
-            throw new ClassMetaDataException("В классе не найден публичный конструктор", e);
-        }
+        return constructor;
     }
 
     @Override
     public Field getIdField() {
-        return this.IdField;
+        return this.idField;
     }
 
     @Override
