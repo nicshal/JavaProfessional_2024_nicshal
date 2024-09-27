@@ -18,7 +18,7 @@ public final class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> 
     private final List<Field> allFieldst;
     private final List<Field> fieldsWithoutId;
     private final Field idField;
-    Constructor<T> constructor;
+    private final Constructor<T> constructor;
 
     private EntityClassMetaDataImpl(Class<T> clazz, Field[] fields) {
         this.clazz = clazz;
