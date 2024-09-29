@@ -70,4 +70,5 @@ public class ClientDataTemplateJdbc implements DataTemplate<Client> {
             throw new DataTemplateException(e);
         }
     }
+
 }
