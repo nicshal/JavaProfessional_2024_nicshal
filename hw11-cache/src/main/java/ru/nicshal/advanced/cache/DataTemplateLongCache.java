@@ -9,12 +9,12 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
-public class DataTemplateCache<T> implements DataTemplateHW<T>, WithListener<Long, T> {
+public class DataTemplateLongCache<T> implements DataTemplateHW<T>, WithListener<Long, T> {
 
     private final MyCache<Long, T> cache;
     private final DataTemplateHW<T> dataTemplate;
 
-    public DataTemplateCache(DataTemplateHW<T> dataTemplate) {
+    public DataTemplateLongCache(DataTemplateHW<T> dataTemplate) {
         this.cache = new MyCache<>();
         this.dataTemplate = dataTemplate;
     }

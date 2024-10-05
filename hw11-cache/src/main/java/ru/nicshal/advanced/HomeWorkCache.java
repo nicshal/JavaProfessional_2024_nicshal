@@ -5,7 +5,7 @@ import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.nicshal.advanced.cache.DataTemplateCache;
+import ru.nicshal.advanced.cache.DataTemplateLongCache;
 import ru.nicshal.advanced.core.repository.executor.DbExecutorImpl;
 import ru.nicshal.advanced.core.sessionmanager.TransactionRunnerJdbc;
 import ru.nicshal.advanced.crm.datasource.DriverManagerDataSource;
@@ -35,7 +35,7 @@ public class HomeWorkCache {
         // Работа с клиентом
         EntityClassMetaData<Client> entityClassMetaDataClient = EntityClassMetaDataImpl.of(Client.class);
         EntitySQLMetaData entitySQLMetaDataClient = EntitySQLMetaDataImpl.of(entityClassMetaDataClient);
-        var dataTemplateClientCache = new DataTemplateCache<>(
+        var dataTemplateClientCache = new DataTemplateLongCache<>(
                 new DataTemplateHWJdbc<>(dbExecutor, entitySQLMetaDataClient, entityClassMetaDataClient));
         dataTemplateClientCache.addListener((Long key, Client value, String action) ->
             log.info("key:{}, value:{}, action: {}", key, value, action));
@@ -52,7 +52,7 @@ public class HomeWorkCache {
         // Работа с менеджером
         EntityClassMetaData<Manager> entityClassMetaDataManager = EntityClassMetaDataImpl.of(Manager.class);
         EntitySQLMetaData entitySQLMetaDataManager = EntitySQLMetaDataImpl.of(entityClassMetaDataManager);
-        var dataTemplateManagerCache = new DataTemplateCache<>(
+        var dataTemplateManagerCache = new DataTemplateLongCache<>(
                 new DataTemplateHWJdbc<>(dbExecutor, entitySQLMetaDataManager, entityClassMetaDataManager));
         dataTemplateManagerCache.addListener((Long key, Manager value, String action) ->
                 log.info("key:{}, value:{}, action: {}", key, value, action));
