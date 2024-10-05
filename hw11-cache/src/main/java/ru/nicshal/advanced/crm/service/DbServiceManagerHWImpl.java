@@ -2,20 +2,20 @@ package ru.nicshal.advanced.crm.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.nicshal.advanced.core.repository.DataTemplateDouble;
+import ru.nicshal.advanced.core.repository.DataTemplateHW;
 import ru.nicshal.advanced.core.sessionmanager.TransactionRunner;
 import ru.nicshal.advanced.crm.model.Manager;
 
 import java.util.List;
 import java.util.Optional;
 
-public class DbServiceManagerDoubleImpl implements DBServiceManager {
+public class DbServiceManagerHWImpl implements DBServiceManager {
     private static final Logger log = LoggerFactory.getLogger(DbServiceManagerImpl.class);
 
-    private final DataTemplateDouble<Manager> managerDataTemplate;
+    private final DataTemplateHW<Manager> managerDataTemplate;
     private final TransactionRunner transactionRunner;
 
-    public DbServiceManagerDoubleImpl(TransactionRunner transactionRunner, DataTemplateDouble<Manager> managerDataTemplate) {
+    public DbServiceManagerHWImpl(TransactionRunner transactionRunner, DataTemplateHW<Manager> managerDataTemplate) {
         this.transactionRunner = transactionRunner;
         this.managerDataTemplate = managerDataTemplate;
     }

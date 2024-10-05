@@ -1,23 +1,21 @@
 package ru.nicshal.advanced.cache;
 
-import ru.nicshal.advanced.core.repository.DataTemplateDouble;
+import ru.nicshal.advanced.core.repository.DataTemplateHW;
 import ru.nicshal.advanced.jdbc.exceptions.ClassMetaDataException;
 import ru.nicshal.advanced.jdbc.mapper.EntityClassMetaData;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.WeakHashMap;
 
-public class DataTemplateCache<T> implements DataTemplateDouble<T> {
+public class DataTemplateCache<T> implements DataTemplateHW<T>, WithListener<Long, T> {
 
-    private final Map<Long, T> cache;
-    private final DataTemplateDouble<T> dataTemplate;
+    private final MyCache<Long, T> cache;
+    private final DataTemplateHW<T> dataTemplate;
 
-    public DataTemplateCache(DataTemplateDouble<T> dataTemplate) {
-        this.cache = new WeakHashMap<>();
+    public DataTemplateCache(DataTemplateHW<T> dataTemplate) {
+        this.cache = new MyCache<>();
         this.dataTemplate = dataTemplate;
     }
 
@@ -63,6 +61,16 @@ public class DataTemplateCache<T> implements DataTemplateDouble<T> {
     @Override
     public EntityClassMetaData<T> getEntityClassMetaData() {
         return dataTemplate.getEntityClassMetaData();
+    }
+
+    @Override
+    public void addListener(Listener<Long, T> listener) {
+        cache.addListener(listener);
+    }
+
+    @Override
+    public void removeListener(Listener<Long, T> listener) {
+        cache.removeListener(listener);
     }
 
     private long getIdValue(T object) {

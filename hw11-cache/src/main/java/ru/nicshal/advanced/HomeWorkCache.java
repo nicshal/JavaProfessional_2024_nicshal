@@ -11,9 +11,8 @@ import ru.nicshal.advanced.core.sessionmanager.TransactionRunnerJdbc;
 import ru.nicshal.advanced.crm.datasource.DriverManagerDataSource;
 import ru.nicshal.advanced.crm.model.Client;
 import ru.nicshal.advanced.crm.model.Manager;
-import ru.nicshal.advanced.crm.service.DbServiceClientDoubleImpl;
-import ru.nicshal.advanced.crm.service.DbServiceManagerDoubleImpl;
-import ru.nicshal.advanced.crm.service.DbServiceManagerImpl;
+import ru.nicshal.advanced.crm.service.DbServiceClientHWImpl;
+import ru.nicshal.advanced.crm.service.DbServiceManagerHWImpl;
 import ru.nicshal.advanced.jdbc.mapper.*;
 
 import java.util.List;
@@ -37,9 +36,11 @@ public class HomeWorkCache {
         EntityClassMetaData<Client> entityClassMetaDataClient = EntityClassMetaDataImpl.of(Client.class);
         EntitySQLMetaData entitySQLMetaDataClient = EntitySQLMetaDataImpl.of(entityClassMetaDataClient);
         var dataTemplateClientCache = new DataTemplateCache<>(
-                new DataTemplateDoubleJdbc<>(dbExecutor, entitySQLMetaDataClient, entityClassMetaDataClient));
+                new DataTemplateHWJdbc<>(dbExecutor, entitySQLMetaDataClient, entityClassMetaDataClient));
+        dataTemplateClientCache.addListener((Long key, Client value, String action) ->
+            log.info("key:{}, value:{}, action: {}", key, value, action));
 
-        var dbServiceClientCache = new DbServiceClientDoubleImpl(transactionRunner, dataTemplateClientCache);
+        var dbServiceClientCache = new DbServiceClientHWImpl(transactionRunner, dataTemplateClientCache);
         dbServiceClientCache.saveClient(new Client("dbServiceFirst"));
 
         var clientSecond = dbServiceClientCache.saveClient(new Client("dbServiceSecond"));
@@ -52,9 +53,11 @@ public class HomeWorkCache {
         EntityClassMetaData<Manager> entityClassMetaDataManager = EntityClassMetaDataImpl.of(Manager.class);
         EntitySQLMetaData entitySQLMetaDataManager = EntitySQLMetaDataImpl.of(entityClassMetaDataManager);
         var dataTemplateManagerCache = new DataTemplateCache<>(
-                new DataTemplateDoubleJdbc<>(dbExecutor, entitySQLMetaDataManager, entityClassMetaDataManager));
+                new DataTemplateHWJdbc<>(dbExecutor, entitySQLMetaDataManager, entityClassMetaDataManager));
+        dataTemplateManagerCache.addListener((Long key, Manager value, String action) ->
+                log.info("key:{}, value:{}, action: {}", key, value, action));
 
-        var dbServiceManagerCache = new DbServiceManagerDoubleImpl(transactionRunner, dataTemplateManagerCache);
+        var dbServiceManagerCache = new DbServiceManagerHWImpl(transactionRunner, dataTemplateManagerCache);
         dbServiceManagerCache.saveManager(new Manager("ManagerFirst"));
 
         var managerSecond = dbServiceManagerCache.saveManager(new Manager("ManagerSecond"));
@@ -67,12 +70,12 @@ public class HomeWorkCache {
         long elapsed = finish - start;
         log.info("managerSecondSelected:{}", managerSecondSelectedCache);
         log.info("Время выполнения (кеш):{}", elapsed);
-        //22:13:59.242 [main] INFO ru.nicshal.advanced.HomeWork -- Время выполнения (кеш):494521
+        //01:07:47.715 [main] INFO ru.nicshal.advanced.HomeWork -- Время выполнения (кеш):652992
 
         var dataTemplateManagerNoCache =
-                new DataTemplateJdbc<>(dbExecutor, entitySQLMetaDataManager, entityClassMetaDataManager);
+                new DataTemplateHWJdbc<>(dbExecutor, entitySQLMetaDataManager, entityClassMetaDataManager);
 
-        var dbServiceManagerNoCache = new DbServiceManagerImpl(transactionRunner, dataTemplateManagerNoCache);
+        var dbServiceManagerNoCache = new DbServiceManagerHWImpl(transactionRunner, dataTemplateManagerNoCache);
 
         start = System.nanoTime();
         var managerSecondSelectedNoCache = dbServiceManagerNoCache
@@ -82,7 +85,7 @@ public class HomeWorkCache {
         elapsed = finish - start;
         log.info("managerSecondSelected:{}", managerSecondSelectedNoCache);
         log.info("Время выполнения (база):{}", elapsed);
-        //22:13:59.244 [main] INFO ru.nicshal.advanced.HomeWork -- Время выполнения (база):1953839
+        //01:07:47.718 [main] INFO ru.nicshal.advanced.HomeWork -- Время выполнения (база):3004714
 
         List<Manager> managerList = dbServiceManagerCache.findAll();
     }

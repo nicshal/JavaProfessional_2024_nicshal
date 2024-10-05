@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
-public interface DataTemplateDouble<T> {
+public interface DataTemplateHW<T> {
 
     Optional<T> findById(Connection connection, long id);
 

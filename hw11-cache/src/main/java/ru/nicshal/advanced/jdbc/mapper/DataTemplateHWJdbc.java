@@ -1,6 +1,6 @@
 package ru.nicshal.advanced.jdbc.mapper;
 
-import ru.nicshal.advanced.core.repository.DataTemplateDouble;
+import ru.nicshal.advanced.core.repository.DataTemplateHW;
 import ru.nicshal.advanced.core.repository.executor.DbExecutor;
 import ru.nicshal.advanced.jdbc.exceptions.ClassMetaDataException;
 
@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class DataTemplateDoubleJdbc<T> implements DataTemplateDouble<T> {
+public class DataTemplateHWJdbc<T> implements DataTemplateHW<T> {
 
     private final DbExecutor dbExecutor;
     private final EntitySQLMetaData entitySQLMetaData;
     private final EntityClassMetaData<T> entityClassMetaData;
 
-    public DataTemplateDoubleJdbc(DbExecutor dbExecutor, EntitySQLMetaData entitySQLMetaData, EntityClassMetaData<T> entityClassMetaData) {
+    public DataTemplateHWJdbc(DbExecutor dbExecutor, EntitySQLMetaData entitySQLMetaData, EntityClassMetaData<T> entityClassMetaData) {
         this.dbExecutor = dbExecutor;
         this.entitySQLMetaData = entitySQLMetaData;
         this.entityClassMetaData = entityClassMetaData;
