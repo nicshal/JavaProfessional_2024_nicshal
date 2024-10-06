@@ -9,22 +9,30 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
-public class DataTemplateLongCache<T> implements DataTemplateHW<T>, WithListener<Long, T> {
+public class DataTemplateKeyStringCache<T> implements DataTemplateHW<T>, WithListener<String, T> {
 
-    private final MyCache<Long, T> cache;
+    private static final String prefix = "cache_";
+
+    //В качестве ключа в WeakHashMap Integer, Long использовать не очень хорошо
+    //Причина - часть этих объектов закеширована и реально не удаляется
+    //(смотри описание типов и операции упаковки и распаковки)
+    //Хорошее объяснение - смотри лекцию примерно 50-ая минута
+    //Поэтому здесь используем строку с префиксом (часть строк тоже может кешироваться)
+    //Здесь можно подумать какого-то другого (более эффективного) типа данных для ключа
+    private final MyCache<String, T> cache;
     private final DataTemplateHW<T> dataTemplate;
 
-    public DataTemplateLongCache(DataTemplateHW<T> dataTemplate) {
+    public DataTemplateKeyStringCache(DataTemplateHW<T> dataTemplate) {
         this.cache = new MyCache<>();
         this.dataTemplate = dataTemplate;
     }
 
     @Override
     public Optional<T> findById(Connection connection, long id) {
-        T cacheItem = cache.get(id);
+        T cacheItem = cache.get(prefix + id);
         if (cacheItem == null) {
             Optional<T> item = dataTemplate.findById(connection, id);
-            item.ifPresent(t -> cache.put(id, t));
+            item.ifPresent(t -> cache.put(prefix + id, t));
             return item;
         }
         return Optional.of(cacheItem);
@@ -39,7 +47,7 @@ public class DataTemplateLongCache<T> implements DataTemplateHW<T>, WithListener
         // - отдаем данные наружу
         List<T> objectList = dataTemplate.findAll(connection);
         for (T object : objectList) {
-            cache.put(getIdValue(object), object);
+            cache.put(prefix + getIdValue(object), object);
         }
         return objectList;
     }
@@ -48,14 +56,14 @@ public class DataTemplateLongCache<T> implements DataTemplateHW<T>, WithListener
     public long insert(Connection connection, T object) {
         long id = dataTemplate.insert(connection, object);
         setIdValue(object, id);
-        cache.put(id, object);
+        cache.put(prefix + id, object);
         return id;
     }
 
     @Override
     public void update(Connection connection, T object) {
         dataTemplate.update(connection, object);
-        cache.put(getIdValue(object), object);
+        cache.put(prefix + getIdValue(object), object);
     }
 
     @Override
@@ -64,12 +72,12 @@ public class DataTemplateLongCache<T> implements DataTemplateHW<T>, WithListener
     }
 
     @Override
-    public void addListener(Listener<Long, T> listener) {
+    public void addListener(Listener<String, T> listener) {
         cache.addListener(listener);
     }
 
     @Override
-    public void removeListener(Listener<Long, T> listener) {
+    public void removeListener(Listener<String, T> listener) {
         cache.removeListener(listener);
     }
 

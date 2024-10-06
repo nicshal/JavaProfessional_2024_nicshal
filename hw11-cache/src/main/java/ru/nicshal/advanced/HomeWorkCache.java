@@ -5,7 +5,7 @@ import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.nicshal.advanced.cache.DataTemplateLongCache;
+import ru.nicshal.advanced.cache.DataTemplateKeyStringCache;
 import ru.nicshal.advanced.core.repository.executor.DbExecutorImpl;
 import ru.nicshal.advanced.core.sessionmanager.TransactionRunnerJdbc;
 import ru.nicshal.advanced.crm.datasource.DriverManagerDataSource;
@@ -35,9 +35,9 @@ public class HomeWorkCache {
         // Работа с клиентом
         EntityClassMetaData<Client> entityClassMetaDataClient = EntityClassMetaDataImpl.of(Client.class);
         EntitySQLMetaData entitySQLMetaDataClient = EntitySQLMetaDataImpl.of(entityClassMetaDataClient);
-        var dataTemplateClientCache = new DataTemplateLongCache<>(
+        var dataTemplateClientCache = new DataTemplateKeyStringCache<>(
                 new DataTemplateHWJdbc<>(dbExecutor, entitySQLMetaDataClient, entityClassMetaDataClient));
-        dataTemplateClientCache.addListener((Long key, Client value, String action) ->
+        dataTemplateClientCache.addListener((String key, Client value, String action) ->
             log.info("key:{}, value:{}, action: {}", key, value, action));
 
         var dbServiceClientCache = new DbServiceClientHWImpl(transactionRunner, dataTemplateClientCache);
@@ -52,9 +52,9 @@ public class HomeWorkCache {
         // Работа с менеджером
         EntityClassMetaData<Manager> entityClassMetaDataManager = EntityClassMetaDataImpl.of(Manager.class);
         EntitySQLMetaData entitySQLMetaDataManager = EntitySQLMetaDataImpl.of(entityClassMetaDataManager);
-        var dataTemplateManagerCache = new DataTemplateLongCache<>(
+        var dataTemplateManagerCache = new DataTemplateKeyStringCache<>(
                 new DataTemplateHWJdbc<>(dbExecutor, entitySQLMetaDataManager, entityClassMetaDataManager));
-        dataTemplateManagerCache.addListener((Long key, Manager value, String action) ->
+        dataTemplateManagerCache.addListener((String key, Manager value, String action) ->
                 log.info("key:{}, value:{}, action: {}", key, value, action));
 
         var dbServiceManagerCache = new DbServiceManagerHWImpl(transactionRunner, dataTemplateManagerCache);
@@ -70,7 +70,7 @@ public class HomeWorkCache {
         long elapsed = finish - start;
         log.info("managerSecondSelected:{}", managerSecondSelectedCache);
         log.info("Время выполнения (кеш):{}", elapsed);
-        //01:07:47.715 [main] INFO ru.nicshal.advanced.HomeWork -- Время выполнения (кеш):652992
+        //19:53:29.641 [main] INFO ru.nicshal.advanced.HomeWork -- Время выполнения (кеш):967937
 
         var dataTemplateManagerNoCache =
                 new DataTemplateHWJdbc<>(dbExecutor, entitySQLMetaDataManager, entityClassMetaDataManager);
@@ -85,7 +85,7 @@ public class HomeWorkCache {
         elapsed = finish - start;
         log.info("managerSecondSelected:{}", managerSecondSelectedNoCache);
         log.info("Время выполнения (база):{}", elapsed);
-        //01:07:47.718 [main] INFO ru.nicshal.advanced.HomeWork -- Время выполнения (база):3004714
+        //19:53:29.645 [main] INFO ru.nicshal.advanced.HomeWork -- Время выполнения (база):2875971
 
         List<Manager> managerList = dbServiceManagerCache.findAll();
     }
