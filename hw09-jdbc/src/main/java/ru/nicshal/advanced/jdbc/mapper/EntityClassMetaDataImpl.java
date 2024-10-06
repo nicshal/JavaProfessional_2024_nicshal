@@ -15,19 +15,19 @@ public final class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> 
 
     private static final Predicate<Field> FIELD_ID_PREDICATE = field -> field.isAnnotationPresent(Id.class);
     private final Class<T> clazz;
-    private final List<Field> allFieldst;
+    private final List<Field> allFields;
     private final List<Field> fieldsWithoutId;
     private final Field idField;
     private final Constructor<T> constructor;
 
     private EntityClassMetaDataImpl(Class<T> clazz, Field[] fields) {
         this.clazz = clazz;
-        this.allFieldst = new LinkedList<>(Arrays.asList(fields.clone()));
-        this.fieldsWithoutId = allFieldst
+        this.allFields = new LinkedList<>(Arrays.asList(fields.clone()));
+        this.fieldsWithoutId = allFields
                 .stream()
                 .filter(FIELD_ID_PREDICATE.negate())
                 .collect(Collectors.toList());
-        this.idField = allFieldst
+        this.idField = allFields
                 .stream()
                 .filter(FIELD_ID_PREDICATE)
                 .findFirst()
@@ -60,7 +60,7 @@ public final class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> 
 
     @Override
     public List<Field> getAllFields() {
-        return this.allFieldst;
+        return this.allFields;
     }
 
     @Override
