@@ -9,6 +9,7 @@ include("hw07-message-handler")
 include("hw08-json")
 include("hw09-jdbc")
 include("hw11-cache")
+include("hw13-ioc-container")
 
 pluginManagement {
     val jgitver: String by settings
@@ -31,3 +32,4 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
+
