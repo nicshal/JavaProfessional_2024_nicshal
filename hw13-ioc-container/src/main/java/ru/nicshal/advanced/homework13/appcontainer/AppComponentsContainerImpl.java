@@ -70,16 +70,16 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     }
 
     private Object findComponent(Class<?> clazz) {
-        long count = appComponents.stream()
+        List<Object> objectList = appComponents.stream()
                 .filter(component -> clazz.isAssignableFrom(component.getClass()))
-                .count();
-        if (count > 1) {
+                .toList();
+        if (objectList.isEmpty()) {
+            throw new ComponentNotFoundException("Component not found by class: " + clazz.getName());
+        }
+        if (objectList.size() > 1) {
             throw new TooManyBeanException("Too many bean for class" + clazz.getName());
         }
-        return appComponents.stream()
-                .filter(component -> clazz.isAssignableFrom(component.getClass()))
-                .findFirst()
-                .orElseThrow(() -> new ComponentNotFoundException("Component not found by class: " + clazz.getName()));
+        return objectList.get(0);
     }
 
     private List<Method> getClassMethods(Class<?> clazz) {
