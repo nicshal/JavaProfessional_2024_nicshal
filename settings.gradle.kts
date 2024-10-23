@@ -8,6 +8,7 @@ include("hw06-atm")
 include("hw07-message-handler")
 include("hw08-json")
 include("hw09-jdbc")
+include("hw10-hibernate")
 include("hw11-cache")
 include("hw13-ioc-container")
 
