@@ -52,7 +52,7 @@ public class Client implements Cloneable {
         this.id = id;
         this.name = name;
         this.address = address;
-        setPhones(phones);
+        setPhones(List.copyOf(phones));
     }
 
     @Override
