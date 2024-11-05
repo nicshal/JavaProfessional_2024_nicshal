@@ -19,13 +19,13 @@ public class Printer implements Runnable {
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            iterate(rangeClosed(MIN_NUMBER, MAX_NUMBER));
+            print(rangeClosed(MIN_NUMBER, MAX_NUMBER));
             sleep(1000);
-            iterate(range(MIN_NUMBER, MAX_NUMBER - 1).map(i -> MAX_NUMBER - i));
+            print(range(MIN_NUMBER, MAX_NUMBER - 1).map(i -> MAX_NUMBER - i));
         }
     }
 
-    private void iterate(IntStream range) {
+    private void print(IntStream range) {
         range.forEach(value -> {
                     synchronized (this) {
                         String currentThread = Thread.currentThread().getName();
