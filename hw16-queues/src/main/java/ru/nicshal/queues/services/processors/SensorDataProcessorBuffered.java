@@ -8,6 +8,7 @@ import ru.nicshal.queues.lib.SensorDataBufferedWriter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
 
 @SuppressWarnings({"java:S1068", "java:S125"})
@@ -33,9 +34,9 @@ public class SensorDataProcessorBuffered implements SensorDataProcessor {
         dataBuffer.add(data);
     }
 
-    public void flush() {
+    public synchronized void flush() {
         try {
-            ArrayList<SensorData> data = new ArrayList<>();
+            List<SensorData> data = new ArrayList<>();
             dataBuffer.drainTo(data);
             if (!data.isEmpty()) {
                 writer.writeBufferedData(data);
