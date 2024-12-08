@@ -13,6 +13,7 @@ include("hw11-cache")
 include("hw13-ioc-container")
 include("hw15-thread-synchronization")
 include("hw16-queues")
+include("hw17-grpc")
 
 pluginManagement {
     val jgitver: String by settings
@@ -35,4 +36,4 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
-
+include("hw17-grpc")
