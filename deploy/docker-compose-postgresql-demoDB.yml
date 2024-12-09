@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   postgres:
-    image: postgres:13
+    image: postgres:17
     container_name: pg-docker
     environment:
       POSTGRES_USER: usr
