@@ -14,6 +14,8 @@ include("hw13-ioc-container")
 include("hw15-thread-synchronization")
 include("hw16-queues")
 include("hw17-grpc")
+include ("hw18-webflux-chat:client-service")
+include ("hw18-webflux-chat:datastore-service")
 
 pluginManagement {
     val jgitver: String by settings
